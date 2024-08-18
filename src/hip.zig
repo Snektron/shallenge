@@ -11,6 +11,9 @@ pub fn unexpected(err: c_uint) noreturn {
     unreachable;
 }
 
+pub fn init() void {
+}
+
 pub fn malloc(comptime T: type, n: usize) ![]T {
     var result: [*]T = undefined;
     return switch (c.hipMalloc(

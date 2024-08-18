@@ -2,11 +2,16 @@ const std = @import("std");
 const Hash = std.crypto.hash.sha2.Sha256;
 const assert = std.debug.assert;
 
+const build_options = @import("build_options");
+
 pub const std_options = .{
     .log_level = .info,
 };
 
-const hip = @import("hip.zig");
+const hip = switch (build_options.gpu_runtime) {
+    .hip => @import("hip.zig"),
+    .cuda => @import("cuda.zig"),
+};
 
 const block_size = 256;
 const grid_size = 65536;
@@ -95,6 +100,8 @@ pub fn shallenge(
 }
 
 pub fn main() !void {
+    hip.init();
+
     const d_out = try hip.malloc(u64, 1);
     defer hip.free(d_out);
 
