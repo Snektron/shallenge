@@ -4,7 +4,7 @@ const assert = std.debug.assert;
 
 const build_options = @import("build_options");
 
-pub const std_options = .{
+pub const std_options: std.Options = .{
     .log_level = .info,
 };
 
@@ -70,7 +70,7 @@ inline fn string(seed: Seed) [36]u8 {
 pub fn shallenge(
     epoch: *const addrspace(.global) u32,
     out: *addrspace(.global) u64,
-) callconv(.Kernel) void {
+) callconv(.kernel) void {
     const e = epoch.*;
     const bid = @workGroupId(0);
     const tid = @workItemId(0);
@@ -161,6 +161,6 @@ pub fn main() !void {
         std.log.info("zeros (actual): {}", .{zeros_actual});
         std.log.info("seed: {}", .{seed});
         std.log.info("string: {s}", .{str});
-        std.log.info("hash: {}", .{std.fmt.fmtSliceHexLower(&digest)});
+        std.log.info("hash: {x}", .{&digest});
     }
 }

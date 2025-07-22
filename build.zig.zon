@@ -1,6 +1,7 @@
 .{
-    .name = "shallenge",
+    .name = .shallenge,
     .version = "0.1.0",
+    .fingerprint = 0x7bc9cb203ecacb6b,
     .dependencies = .{
         .hip = .{
             .url = "https://github.com/ROCm/HIP/archive/refs/tags/rocm-6.2.0.tar.gz",
