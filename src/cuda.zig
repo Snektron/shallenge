@@ -95,8 +95,8 @@ pub fn malloc(comptime T: type, n: usize) ![]T {
 }
 
 pub fn free(ptr: anytype) void {
-    const actual_ptr = switch (@typeInfo(@TypeOf(ptr)).Pointer.size) {
-        .Slice => ptr.ptr,
+    const actual_ptr = switch (@typeInfo(@TypeOf(ptr)).pointer.size) {
+        .slice => ptr.ptr,
         else => ptr,
     };
 

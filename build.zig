@@ -18,10 +18,12 @@ pub fn build(b: *std.Build) void {
     // Build final executable
     const exe = b.addExecutable(.{
         .name = "shallenge",
-        .root_source_file = b.path("src/main.zig"),
-        .target = host_target,
-        .optimize = optimize,
-        .link_libc = true,
+        .root_module = b.createModule( .{
+            .root_source_file = b.path("src/main.zig"),
+            .target = host_target,
+            .optimize = optimize,
+            .link_libc = true,
+        }),
     });
     exe.root_module.addOptions("build_options", opts);
     b.installArtifact(exe);
@@ -45,12 +47,16 @@ pub fn build(b: *std.Build) void {
 
             const hip = b.dependency("hip", .{});
 
-            const amdgcn_code = b.addSharedLibrary(.{
+            const amdgcn_code = b.addLibrary(.{
+                .linkage = .dynamic,
                 .name = "shallenge-kernel",
-                .root_source_file = b.path("src/main_device.zig"),
-                .target = amdgcn_target,
-                .optimize = .ReleaseFast,
+                .root_module = b.createModule(.{
+                    .root_source_file = b.path("src/main_device.zig"),
+                    .target = amdgcn_target,
+                    .optimize = .ReleaseFast,
+                }),
             });
+            amdgcn_code.root_module.addOptions("build_options", opts);
             amdgcn_code.linker_allow_shlib_undefined = false;
             amdgcn_code.bundle_compiler_rt = false;
 
@@ -70,12 +76,16 @@ pub fn build(b: *std.Build) void {
                 .cpu_features = nvptx_mcpu,
             }) catch unreachable);
 
-            const nvptx_code = b.addSharedLibrary(.{
+            const nvptx_code = b.addLibrary(.{
+                .linkage = .dynamic,
                 .name = "shallenge-kernel",
-                .root_source_file = b.path("src/main_device.zig"),
-                .target = nvptx_target,
-                .optimize = .ReleaseFast,
+                .root_module = b.createModule(.{
+                    .root_source_file = b.path("src/main_device.zig"),
+                    .target = nvptx_target,
+                    .optimize = .ReleaseFast,
+                }),
             });
+            nvptx_code.root_module.addOptions("build_options", opts);
             nvptx_code.linker_allow_shlib_undefined = false;
             nvptx_code.bundle_compiler_rt = false;
 

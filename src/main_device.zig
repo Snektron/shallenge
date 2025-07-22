@@ -11,5 +11,5 @@ pub fn panic(msg: []const u8, stack_trace: ?*std.builtin.StackTrace, _: ?usize) 
 }
 
 comptime {
-    @export(@import("main.zig").shallenge, .{ .name = "shallenge" });
+    @export(&@import("main.zig").shallenge, .{ .name = "shallenge" });
 }
