@@ -70,10 +70,7 @@ inline fn string(seed: Seed) [36]u8 {
 pub fn shallenge(
     epoch: *const addrspace(.global) u32,
     out: *addrspace(.global) u64,
-) callconv(switch (build_options.gpu_runtime) {
-    .hip => .amdgcn_kernel,
-    .cuda => .nvptx_kernel,
-}) void {
+) callconv(.kernel) void {
     const e = epoch.*;
     const bid = @workGroupId(0);
     const tid = @workItemId(0);
