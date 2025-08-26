@@ -8,7 +8,7 @@ pub const c = @cImport({
 
 pub fn unexpected(err: c_uint) noreturn {
     std.log.err("unexpected hip result: {s}", .{c.hipGetErrorName(err)});
-    unreachable;
+    @panic("unexpected HIP error");
 }
 
 pub fn init() void {
